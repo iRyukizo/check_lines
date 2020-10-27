@@ -11,7 +11,7 @@ check_lines
 """
 
 import getopt, os, sys
-from colorama import Fore
+from colorama import Fore, Style
 
 def usage(out):
     print("Usage: ", end="")
@@ -108,11 +108,13 @@ def check(actual, max_lines):
                     nb_lines += 1
             if nb_lines > max_lines:
                 res = 1
+                print(Style.BRIGHT, end="", file=sys.stderr)
                 print(actu[3]+":"+str(actu[2])+":"+str(actu[5])+":", \
                         Fore.RED + "warning: " + Fore.RESET + \
                         "This function is too long: " + \
                         str(nb_lines) + " lines [expected " + \
-                        str(max_lines) +" lines].", file=sys.stderr)
+                        str(max_lines) +" lines]", file=sys.stderr)
+                print(Style.RESET_ALL, end="", file=sys.stderr)
                 strange_print(actu[4], actu[5], sys.stderr)
             f.close()
     return res
@@ -124,9 +126,10 @@ def strange_print(actu, offset, where):
     offset : real start of function
     """
     print(actu, file=where)
+    print(Style.BRIGHT + Fore.GREEN, end="", file=where)
     for i in range(offset):
         print(" ", file=where, end="")
-    print("^", file=where)
+    print("^", Style.RESET_ALL, file=where)
 
 if __name__ == "__main__":
     main()
