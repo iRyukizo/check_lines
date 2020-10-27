@@ -13,10 +13,14 @@ python3
 ./check_lines.py [files]
 ```
 Examples:
-```
+```sh
 [ryuki@apollo11]~ ./check_lines.py main.c
 main.c:49:18: warning: This function is too long: 34 lines [expected 25 lines].
 int main(void)
     ^
 ```
 ---
+### You may want to do:
+```sh
+ln -s check_lines/check_lines.py /usr/bin/check_lines
+```
