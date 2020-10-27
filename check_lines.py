@@ -35,28 +35,30 @@ def check(actual):
         if (actu[1] == "function"):
             f = open(actu[3])
             start_func = int(actu[2])
-            braces, nb_lines = 1, 0
+            braces, nb_lines = 0, 0
             lines = f.readlines()
             lines = [s.strip() for s in lines]
-            for k in lines[(start_func + 1):]:
+            good = False
+            for k in lines[(start_func - 1):]:
                 if len(k) == 0 or k[:2] == "/*" or k[:2] == "**" or k[:2] == "*/":
                     continue
                 if k == "{":
                     braces+=1
+                    good = True
                     continue
                 if k == "}":
                     braces -= 1
                     continue
-                if braces <= 0:
+                if good and braces <= 0:
                     break
-                nb_lines += 1
+                if good:
+                    nb_lines += 1
             if nb_lines > 25:
                 res = 1
                 print(actu[3]+":"+str(actu[2])+":"+str(actu[5])+":", \
                         Fore.RED + "warning: This function is too long: " + \
                         str(nb_lines) + " lines [expected 25 lines]." + \
                         Fore.RESET)
-                print(Fore.RESET, end="")
                 strange_print(actu[4], actu[5])
             f.close()
     return res
