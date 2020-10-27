@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import re, os, sys
+import os, sys
 from colorama import Fore
 
 def usage():
