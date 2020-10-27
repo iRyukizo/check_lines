@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-ln -s check_lines.py /usr/bin/check_lines
+ln -s $PWD/check_lines.py /usr/bin/check_lines
