@@ -63,8 +63,10 @@ def process(concatenate, max_lines):
     for i in range(len(actual)):
         place = 0
         for ici in actual[i][5:]:
-            if len(ici) > len(actual[i][0]) and ici[:len(actual[i][0])] == actual[i][0]:
-                place = len(actual[i][4]) + 1
+            if len(ici) > len(actual[i][0]) and \
+                    (ici[:len(actual[i][0])] == actual[i][0] or \
+                     ici[1:len(actual[i][0])+1] == actual[i][0] ):
+                place = len(actual[i][4]) + 1 + (ici[1:len(actual[i][0])+1] == actual[i][0])
             actual[i][4] += " " + ici
         actual[i] = actual[i][:5]
         actual[i].append(place)
