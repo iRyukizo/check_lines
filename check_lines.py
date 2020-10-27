@@ -109,23 +109,24 @@ def check(actual, max_lines):
             if nb_lines > max_lines:
                 res = 1
                 print(actu[3]+":"+str(actu[2])+":"+str(actu[5])+":", \
-                        Fore.RED + "warning: This function is too long: " + \
-                        str(nb_lines) + " lines [expected " + str(max_lines) +" lines]." + \
-                        Fore.RESET)
-                strange_print(actu[4], actu[5])
+                        Fore.RED + "warning: " + Fore.RESET + \
+                        "This function is too long: " + \
+                        str(nb_lines) + " lines [expected " + \
+                        str(max_lines) +" lines].", file=sys.stderr)
+                strange_print(actu[4], actu[5], sys.stderr)
             f.close()
     return res
 
-def strange_print(actu, offset):
+def strange_print(actu, offset, where):
     """
     Will print the name of the given function.
     actu : first line of the function prototype
     offset : real start of function
     """
-    print(actu)
+    print(actu, file=where)
     for i in range(offset):
-        print(" ", end="")
-    print("^")
+        print(" ", file=where, end="")
+    print("^", file=where)
 
 if __name__ == "__main__":
     main()
