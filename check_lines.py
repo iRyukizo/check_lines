@@ -41,6 +41,7 @@ def check(actual):
             good = False
             for k in lines[(start_func - 1):]:
                 if len(k) == 0 or \
+                        k[0] == ';' or \
                         k[:2] == '//' or \
                         k[:2] == "/*" or k[:2] == "**" or k[:2] == "*/":
                     continue
