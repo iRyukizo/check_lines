@@ -1,19 +1,61 @@
 #!/usr/bin/env python3
 
-import os, sys
+__author__ = "Hugo 'iRyukizo' MOREAU"
+__maintainer__ = "Hugo 'iRyukizo' MOREAU"
+__status__ = "Production"
+
+"""
+check_lines
+2020
+@author: iRyukizo
+"""
+
+import getopt, os, sys
 from colorama import Fore
 
-def usage():
-    print("Usage:")
-    print(sys.argv[0] + " [files]")
+def usage(out):
+    print("Usage: ", end="")
+    if (sys.argv[0][len(sys.argv[0]) - 2:] != "py"):
+        print("check_lines", end="")
+    else:
+        print(sys.argv[0], end="")
+    print(" [OPTION]... [FILE]...")
+    print("Options:")
+    print("\t-l, --lines\tSpecify number of maximum lines for each functions.")
+    print("\t-h, --help\tDisplay this message.")
+    print("\nFull documentation <https://github.com/iRyukizo/check_lines>")
+    exit(out)
 
 def main():
-    if (len(sys.argv) < 2):
-        usage()
-        exit(1)
+    try:
+        optlist, args = getopt.getopt(sys.argv[1:], "l:h", ['lines=', "help"])
+    except getopt.GetoptErr as err:
+        print(err)
+        exit(2)
+    max_lines = 25
+    for opt, arg in optlist:
+        if opt == '-l' or opt == '--lines=' or opt == '--lines':
+            max_lines = int(arg)
+        elif opt == '-h' or opt == '--help':
+            usage(0)
+        else:
+            print(sys.argv[0], ":", opt, ": unhandled option.")
+            assert False, "undhandled option"
+
+    if (len(args) < 1):
+        usage(1)
     concatenate = ""
-    for i in range(1, len(sys.argv)):
-        concatenate += " " + sys.argv[i]
+    for elmt in args:
+        concatenate += " " + elmt
+    exit(process(concatenate, max_lines))
+
+def process(concatenate, max_lines):
+    """
+    Process all files given to check_files.
+    concatenate : all given files
+    max_lines : maximum number of lines (by default 25)
+    return : status
+    """
     actual = os.popen("ctags -x --c-kinds=fp" + concatenate).read().split("\n")
     actual = actual[:len(actual) - 1]
     actual = [s.strip() for s in actual]
@@ -27,9 +69,15 @@ def main():
         actual[i] = actual[i][:5]
         actual[i].append(place)
 
-    exit(check(actual))
+    return check(actual, max_lines)
 
-def check(actual):
+def check(actual, max_lines):
+    """
+    Check all functions in given files.
+    actual : list of all actual function
+    max_lines : maximum number of lines (by default 25)
+    return : status
+    """
     res = 0
     for actu in actual:
         if (actu[1] == "function"):
@@ -56,17 +104,22 @@ def check(actual):
                     break
                 if good:
                     nb_lines += 1
-            if nb_lines > 25:
+            if nb_lines > max_lines:
                 res = 1
                 print(actu[3]+":"+str(actu[2])+":"+str(actu[5])+":", \
                         Fore.RED + "warning: This function is too long: " + \
-                        str(nb_lines) + " lines [expected 25 lines]." + \
+                        str(nb_lines) + " lines [expected " + str(max_lines) +" lines]." + \
                         Fore.RESET)
                 strange_print(actu[4], actu[5])
             f.close()
     return res
 
 def strange_print(actu, offset):
+    """
+    Will print the name of the given function.
+    actu : first line of the function prototype
+    offset : real start of function
+    """
     print(actu)
     for i in range(offset):
         print(" ", end="")
