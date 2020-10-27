@@ -24,3 +24,7 @@ int main(void)
 ```sh
 ln -s check_lines/check_lines.py /usr/bin/check_lines
 ```
+In that case just run :
+```sh
+./install.sh
+```
