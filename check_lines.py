@@ -40,7 +40,9 @@ def check(actual):
             lines = [s.strip() for s in lines]
             good = False
             for k in lines[(start_func - 1):]:
-                if len(k) == 0 or k[:2] == "/*" or k[:2] == "**" or k[:2] == "*/":
+                if len(k) == 0 or \
+                        k[:2] == '//' or \
+                        k[:2] == "/*" or k[:2] == "**" or k[:2] == "*/":
                     continue
                 if k == "{":
                     braces+=1
