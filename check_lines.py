@@ -56,7 +56,7 @@ def process(concatenate, max_lines):
     max_lines : maximum number of lines (by default 25)
     return : status
     """
-    actual = os.popen("ctags -x --c-kinds=fp" + concatenate).read().split("\n")
+    actual = os.popen("ctags -x --c-kinds=fp --sort=no" + concatenate).read().split("\n")
     actual = actual[:len(actual) - 1]
     actual = [s.strip() for s in actual]
     actual = [s.split() for s in actual]
