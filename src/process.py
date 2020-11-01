@@ -58,26 +58,9 @@ def check(actual, max_lines, remaining, maxlen):
             if remaining and file_ != actu[3]:
                 file_ = actu[3]
                 print("File:", Style.BRIGHT + Fore.CYAN + file_ + Style.RESET_ALL)
-            start_func = int(actu[2])
-            braces, nb_lines = 0, 0
             lines = f.readlines()
             lines = [s.strip() for s in lines]
-            good = False
-            for k in lines[(start_func - 1):]:
-                if len(k) == 0 or \
-                        ignore_case(k, [";"], ["//", "/*", "**", "*/"]):
-                    continue
-                if k == "{":
-                    braces+=1
-                    good = True
-                    continue
-                if k == "}":
-                    braces -= 1
-                    continue
-                if good and braces <= 0:
-                    break
-                if good:
-                    nb_lines += 1
+            nb_lines = micro_check(lines, int(actu[2]))
             if not remaining and nb_lines > max_lines:
                 res = 1
                 print_err(actu, nb_lines, max_lines, sys.stderr)
@@ -85,6 +68,31 @@ def check(actual, max_lines, remaining, maxlen):
                 remain(actu, max_lines, nb_lines, maxlen)
             f.close()
     return res
+
+def micro_check(lines, start_func):
+    """
+    Check current function
+    lines : list of lines in file
+    start_func : beginning of function
+    return : number of lines
+    """
+    braces, nb_lines, good = 0, 0, False
+    for k in lines[(start_func - 1):]:
+        if len(k) == 0 or \
+                ignore_case(k, [";"], ["//", "/*", "**", "*/"]):
+            continue
+        if k == "{":
+            braces+=1
+            good = True
+            continue
+        if k == "}":
+            braces -= 1
+            continue
+        if good and braces <= 0:
+            break
+        if good:
+            nb_lines += 1
+    return nb_lines
 
 def ignore_case(test, cases_1, cases_2):
     """
