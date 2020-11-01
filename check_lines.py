@@ -41,7 +41,7 @@ def main():
     for opt, arg in optlist:
         if opt == '-l' or opt == '--lines=' or opt == '--lines':
             max_lines = int(arg)
-        elif opt == '-r' or opt == '--remaning':
+        elif opt == '-r' or opt == '--remaining':
             remaining = True
         elif opt == '-h' or opt == '--help':
             usage(0)
