@@ -23,15 +23,20 @@ def usage(out):
     print("Options:")
     print("\t-l, --lines\tSpecify number of maximum lines for each functions.")
     print("\t-h, --help\tDisplay this message.")
+    print("\t-r, --remaing\tShow number of remaining lines.")
     print("\nFull documentation <https://github.com/iRyukizo/check_lines>")
     exit(out)
 
 def main():
     try:
         optlist, args = getopt.getopt(sys.argv[1:], "l:h", ['lines=', "help"])
-    except getopt.GetoptErr as err:
-        print(err)
-        exit(2)
+    except getopt.GetoptError as err:
+        if (sys.argv[0][len(sys.argv[0]) - 2:] != "py"):
+            print("check_lines", end="", file=sys.stderr)
+        else:
+            print(sys.argv[0], end="", file=sys.stderr)
+        print(":", err, file=sys.stderr)
+        usage(2)
     max_lines = 25
     for opt, arg in optlist:
         if opt == '-l' or opt == '--lines=' or opt == '--lines':
@@ -40,7 +45,7 @@ def main():
             usage(0)
         else:
             print(sys.argv[0], ":", opt, ": unhandled option.")
-            assert False, "undhandled option"
+            usage(1)
 
     if (len(args) < 1):
         usage(1)
