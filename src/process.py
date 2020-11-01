@@ -80,14 +80,7 @@ def check(actual, max_lines, remaining, maxlen):
                     nb_lines += 1
             if not remaining and nb_lines > max_lines:
                 res = 1
-                print(Style.BRIGHT, end="", file=sys.stderr)
-                print(actu[3]+":"+str(actu[2])+":"+str(actu[5])+":", \
-                        Fore.RED + "warning: " + Fore.RESET + \
-                        "This function is too long: " + \
-                        str(nb_lines) + " lines [expected " + \
-                        str(max_lines) +" lines]", file=sys.stderr)
-                print(Style.RESET_ALL, end="", file=sys.stderr)
-                strange_print(actu[4], actu[5], sys.stderr)
+                print_err(actu, nb_lines, max_lines, sys.stderr)
             if remaining:
                 remain(actu, max_lines, nb_lines, maxlen)
             f.close()
@@ -103,17 +96,35 @@ def ignore_case(test, cases_1, cases_2):
     """
     return test[0] in cases_1 or test[:2] in cases_2
 
-def strange_print(actu, offset, where):
+def print_err(actu, nb_lines, max_lines, f):
+    """
+    Print error in a clang-format style
+    actu : actual function
+    nb_lines : number of lines in function
+    max_lines : Maximum number of lines
+    f : file descriptor
+    """
+    print(Style.BRIGHT, end="", file=f)
+    print(actu[3]+":"+str(actu[2])+":"+str(actu[5])+":", end=" ", file=f)
+    print(Fore.RED + "warning:" + Fore.RESET, end=" ", file=f)
+    print("This function is too long: " + \
+            str(nb_lines) + " lines [expected " + \
+            str(max_lines) +" lines]", file=f)
+    print(Style.RESET_ALL, end="", file=f)
+    strange_print(actu[4], actu[5], f)
+
+
+def strange_print(proto, offset, f):
     """
     Will print the name of the given function.
-    actu : first line of the function prototype
+    proto : first line of the function prototype
     offset : real start of function
     """
-    print(actu, file=where)
-    print(Style.BRIGHT + Fore.GREEN, end="", file=where)
+    print(proto, file=f)
+    print(Style.BRIGHT + Fore.GREEN, end="", file=f)
     for i in range(offset):
-        print(" ", file=where, end="")
-    print("^", Style.RESET_ALL, file=where)
+        print(" ", file=f, end="")
+    print("^", Style.RESET_ALL, file=f)
 
 def remain(actu, max_lines, nb_lines, maxlen):
     """
