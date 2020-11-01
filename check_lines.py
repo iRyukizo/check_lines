@@ -52,6 +52,11 @@ def main():
             usage.usage(1)
 
     if (len(args) < 1):
+        if (sys.argv[0][len(sys.argv[0]) - 2:] != "py"):
+            print("check_lines", end="", file=sys.stderr)
+        else:
+            print(sys.argv[0], end="", file=sys.stderr)
+        print(": no files specified", file=sys.stderr)
         usage.usage(1)
     concatenate = ""
     for elmt in args:
