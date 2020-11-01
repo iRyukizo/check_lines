@@ -92,10 +92,13 @@ def check(actual, max_lines, remaining, maxlen):
     """
     if remaining:
         print("-- remaining lines --")
-    res = 0
+    res, file_ = 0, ""
     for actu in actual:
         if (actu[1] == "function"):
             f = open(actu[3])
+            if remaining and file_ != actu[3]:
+                file_ = actu[3]
+                print("File:", Style.BRIGHT + Fore.CYAN + file_ + Style.RESET_ALL)
             start_func = int(actu[2])
             braces, nb_lines = 0, 0
             lines = f.readlines()
@@ -158,7 +161,7 @@ def remain(actu, max_lines, nb_lines, maxlen):
         print_lines = Fore.RED + print_lines
     else:
         print_lines = Fore.GREEN + print_lines
-    print("  {0} {1:<{5}} {2:>8}:\t{3:>15} {4}".format("Function", \
+    print("  {0} {1:<{5}} {2:>8}:\t{3:>15} {4}".format("Function:", \
             Fore.BLUE + actu[0] + Fore.RESET, \
             "(" + actu[2] + ":" + str(actu[5]) + ")", \
             print_lines, \
