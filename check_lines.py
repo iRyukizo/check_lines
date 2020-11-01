@@ -11,21 +11,9 @@ check_lines
 """
 
 import getopt, os, sys
+sys.path.append('src')
+import usage
 from colorama import Fore, Style
-
-def usage(out):
-    print("Usage: ", end="")
-    if (sys.argv[0][len(sys.argv[0]) - 2:] != "py"):
-        print("check_lines", end="")
-    else:
-        print(sys.argv[0], end="")
-    print(" [OPTION]... [FILE]...")
-    print("Options:")
-    print("\t-l, --lines\tSpecify number of maximum lines for each functions.")
-    print("\t-h, --help\tDisplay this message.")
-    print("\t-r, --remaing\tShow number of remaining lines.")
-    print("\nFull documentation <https://github.com/iRyukizo/check_lines>")
-    exit(out)
 
 def main():
     try:
@@ -36,7 +24,7 @@ def main():
         else:
             print(sys.argv[0], end="", file=sys.stderr)
         print(":", err, file=sys.stderr)
-        usage(2)
+        usage.usage(2)
     max_lines, remaining = 25, False
     for opt, arg in optlist:
         if opt == '-l' or opt == '--lines=' or opt == '--lines':
@@ -44,13 +32,13 @@ def main():
         elif opt == '-r' or opt == '--remaining':
             remaining = True
         elif opt == '-h' or opt == '--help':
-            usage(0)
+            usage.usage(0)
         else:
             print(sys.argv[0], ":", opt, ": unhandled option.")
-            usage(1)
+            usage.usage(1)
 
     if (len(args) < 1):
-        usage(1)
+        usage.usage(1)
     concatenate = ""
     for elmt in args:
         concatenate += " " + elmt
