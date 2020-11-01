@@ -65,9 +65,7 @@ def check(actual, max_lines, remaining, maxlen):
             good = False
             for k in lines[(start_func - 1):]:
                 if len(k) == 0 or \
-                        k[0] == ';' or \
-                        k[:2] == '//' or \
-                        k[:2] == "/*" or k[:2] == "**" or k[:2] == "*/":
+                        ignore_case(k, [";"], ["//", "/*", "**", "*/"]):
                     continue
                 if k == "{":
                     braces+=1
@@ -94,6 +92,16 @@ def check(actual, max_lines, remaining, maxlen):
                 remain(actu, max_lines, nb_lines, maxlen)
             f.close()
     return res
+
+def ignore_case(test, cases_1, cases_2):
+    """
+    Ignoring certain type of lines
+    test : string
+    cases_1 : list of cases of size 1
+    cases_2 : list of cases of size 2
+    return : bool
+    """
+    return test[0] in cases_1 or test[:2] in cases_2
 
 def strange_print(actu, offset, where):
     """
