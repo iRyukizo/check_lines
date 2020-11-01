@@ -11,9 +11,24 @@ check_lines
 """
 
 import getopt, os, sys
-sys.path.append('src')
-import usage
 from colorama import Fore, Style
+# A little bit tricky, but does the work for now
+# Since we use a symlink for using checklines,
+# We need to import from the good folder.
+sys.path.append(os.path.join( \
+        os.path.dirname( \
+        os.path.realpath( \
+        os.path.join( \
+        os.path.dirname( \
+        sys.argv[0] \
+        ), sys.argv[0] \
+        ) \
+        ) \
+        ), \
+        'src' \
+        ) \
+        )
+from src import usage
 
 def main():
     try:
