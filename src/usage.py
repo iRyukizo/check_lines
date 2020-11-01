@@ -13,6 +13,10 @@ check_lines
 import sys
 
 def usage(out):
+    """
+    Print on stdout or stderr help page.
+    out : exit value
+    """
     f = correct_std(out)
     print("Usage: ", end="", file=f)
     print_name(f, " [OPTION]... [FILE]...")
@@ -24,6 +28,11 @@ def usage(out):
     exit(out)
 
 def print_name(f, message):
+    """
+    Print on stdout or stderr an err message.
+    f : file descriptor
+    message : message to be displayed
+    """
     if (sys.argv[0][len(sys.argv[0]) - 2:] != "py"):
         print("check_lines", end="", file=f)
     else:
@@ -31,6 +40,10 @@ def print_name(f, message):
     print(message, file=f)
 
 def correct_std(out):
+    """
+    out : value
+    return : file descriptor of out
+    """
     if out:
         return sys.stderr
     return sys.stdout
