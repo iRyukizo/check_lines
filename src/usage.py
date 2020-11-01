@@ -13,15 +13,24 @@ check_lines
 import sys
 
 def usage(out):
-    print("Usage: ", end="")
-    if (sys.argv[0][len(sys.argv[0]) - 2:] != "py"):
-        print("check_lines", end="")
-    else:
-        print(sys.argv[0], end="")
-    print(" [OPTION]... [FILE]...")
-    print("Options:")
-    print("\t-l, --lines\tSpecify number of maximum lines for each functions.")
-    print("\t-h, --help\tDisplay this message.")
-    print("\t-r, --remaing\tShow number of remaining lines.")
-    print("\nFull documentation <https://github.com/iRyukizo/check_lines>")
+    f = correct_std(out)
+    print("Usage: ", end="", file=f)
+    print_name(f, " [OPTION]... [FILE]...")
+    print("Options:", file=f)
+    print("\t-l, --lines\tSpecify number of maximum lines for each functions.", file=f)
+    print("\t-h, --help\tDisplay this message.", file=f)
+    print("\t-r, --remaing\tShow number of remaining lines.", file=f)
+    print("\nFull documentation <https://github.com/iRyukizo/check_lines>", file=f)
     exit(out)
+
+def print_name(f, message):
+    if (sys.argv[0][len(sys.argv[0]) - 2:] != "py"):
+        print("check_lines", end="", file=f)
+    else:
+        print(sys.argv[0], end="", file=f)
+    print(message, file=f)
+
+def correct_std(out):
+    if out:
+        return sys.stderr
+    return sys.stdout

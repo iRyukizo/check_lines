@@ -33,12 +33,8 @@ def main():
     try:
         optlist, args = getopt.getopt(sys.argv[1:], "l:rh", ['lines=', "remaining", "help"])
     except getopt.GetoptError as err:
-        if (sys.argv[0][len(sys.argv[0]) - 2:] != "py"):
-            print("check_lines", end="", file=sys.stderr)
-        else:
-            print(sys.argv[0], end="", file=sys.stderr)
-        print(":", err, file=sys.stderr)
-        usage.usage(2)
+        usage.print_name(sys.stderr, ": " + str(err))
+        usage.usage(1)
     max_lines, remaining = 25, False
     for opt, arg in optlist:
         if opt == '-l' or opt == '--lines=' or opt == '--lines':
@@ -48,15 +44,11 @@ def main():
         elif opt == '-h' or opt == '--help':
             usage.usage(0)
         else:
-            print(sys.argv[0], ":", opt, ": unhandled option.")
+            usage.print_name(sys.stderr, ":" + opt + ": unhandled option.")
             usage.usage(1)
 
     if (len(args) < 1):
-        if (sys.argv[0][len(sys.argv[0]) - 2:] != "py"):
-            print("check_lines", end="", file=sys.stderr)
-        else:
-            print(sys.argv[0], end="", file=sys.stderr)
-        print(": no files specified", file=sys.stderr)
+        usage.print_name(sys.stderr, ": no files specified")
         usage.usage(1)
     concatenate = ""
     for elmt in args:
