@@ -31,29 +31,34 @@ from src import usage, process
 
 def main():
     try:
-        optlist, args = getopt.getopt(sys.argv[1:], "l:rh", ['lines=', "remaining", "help"])
+        optlist, args = getopt.getopt(sys.argv[1:], "i:l:rh", ['lines=', "remaining", 'ignore=', "help"])
     except getopt.GetoptError as err:
         usage.print_name(sys.stderr, ": " + str(err))
         usage.usage(1)
-    max_lines, remaining = 25, False
+    max_lines, remaining, ignore = 25, False, [";", "//", "/*", "**", "*/"]
     for opt, arg in optlist:
         if opt == '-l' or opt == '--lines=' or opt == '--lines':
             max_lines = int(arg)
         elif opt == '-r' or opt == '--remaining':
             remaining = True
+        elif opt == '-i' or opt == '--ignore' or opt == '--ignore=':
+            ignore = arg.split(',')
         elif opt == '-h' or opt == '--help':
             usage.usage(0)
         else:
             usage.print_name(sys.stderr, ":" + opt + ": unhandled option.")
             usage.usage(1)
 
+    sep = [ (x, []) for x in range(len(max(ignore, key=len)) + 1)]
+    for x in ignore:
+        sep[len(x)][1].append(x)
     if (len(args) < 1):
         usage.print_name(sys.stderr, ": no files specified")
         usage.usage(1)
     concatenate = ""
     for elmt in args:
         concatenate += " " + elmt
-    exit(process.process(concatenate, max_lines, remaining))
+    exit(process.process(concatenate, max_lines, remaining, sep))
 
 if __name__ == "__main__":
     main()
