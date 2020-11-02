@@ -21,7 +21,7 @@ def usage(out):
     print("Usage: ", end="", file=f)
     print_name(f, " [OPTION]... [FILE]...")
     print("Options:", file=f)
-    print("\t-i, --ignore\tSpecify which case should be ignored when processing", file=f)
+    print("\t-i, --ignore\tSpecify which case should be ignored when processing.", file=f)
     print("\t-l, --lines\tSpecify number of maximum lines for each functions.", file=f)
     print("\t-h, --help\tDisplay this message.", file=f)
     print("\t-r, --remaing\tShow number of remaining lines.", file=f)
