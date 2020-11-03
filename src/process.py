@@ -21,19 +21,21 @@ def process(concatenate, max_lines, options, ignore):
     ignore : ignore cases
     return : status
     """
-    actual = os.popen("ctags -x --c-kinds=fp --sort=no" + concatenate).read().split("\n")
+    actual = os.popen("ctags -x --c-kinds=f --sort=no" + concatenate).read().split("\n")
     actual = actual[:len(actual) - 1]
     actual = [s.strip() for s in actual]
     actual = [s.split() for s in actual]
-    maxlen, dictio = 0, {}
+    maxlen, dictio = 0, [[0,0,0], {}]
     for i in range(len(actual)):
         place = 0
         if maxlen < len(actual[i][0]):
             maxlen = len(actual[i][0])
         if actual[i][3] not in dictio:
-            dictio[actual[i][3]] = [0, 0, 0]
-        dictio[actual[i][3]][0] += 1
-        dictio[actual[i][3]][1 if actual[i][4][:6] == "static" else 2] += 1
+            dictio[1][actual[i][3]] = [0, 0, 0]
+        dictio[1][actual[i][3]][0] += 1
+        dictio[1][actual[i][3]][1 if actual[i][4][:6] == "static" else 2] += 1
+        dictio[0][0] += 1
+        dictio[0][1 if actual[i][4][:6] == "static" else 2] += 1
         for ici in actual[i][5:]:
             if not place and len(ici) > len(actual[i][0]):
                 j = 0
@@ -46,15 +48,18 @@ def process(concatenate, max_lines, options, ignore):
         actual[i].append(place)
 
     if options[1]:
-        return print_funcs(dictio)
+        return print_funcs(dictio[0], dictio[1])
     return check(actual, max_lines, options, maxlen, ignore)
 
-def print_funcs(dictio):
+def print_funcs(total, dictio):
     """
     Check number of static and non-static functions
     """
     res = 0
     print("-- functions counter --")
+    res = print_func("Total of all   ", total[0], len(dictio) * 10)
+    res = print_func("Total of static", total[1], len(dictio) * 10)
+    res = print_func("Total of normal", total[2], len(dictio) * 5)
     for item in dictio:
         print("File:", Style.BRIGHT + Fore.CYAN + item + Style.RESET_ALL)
         res = print_func("Total ", dictio[item][0], 10) or res
