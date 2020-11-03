@@ -34,18 +34,22 @@ def print_funcs(what, total, dictio):
 
     :return: bool
     """
-    res = 0
+    res1, res2, res3 = 0, 0, 0
+    for item in dictio:
+        res1 = dictio[item][0] > 10 or res1
+        res2 = dictio[item][1] > 10 or res2
+        res3 = dictio[item][2] > 10 or res3
     print("-- functions counter --")
-    res = print_func("Total of all   ", total[0], len(dictio) * 10) or res
-    res = print_func("Total of static", total[1], len(dictio) * 10) or res
-    res = print_func("Total of normal", total[2], len(dictio) * 5) or res
+    print_func("Total of all   ", total[0], len(dictio) * 10 if not res1 else 0)
+    print_func("Total of static", total[1], len(dictio) * 10 if not res2 else 0)
+    print_func("Total of normal", total[2], len(dictio) * 5 if not res3 else 0)
     if what == 1:
         for item in dictio:
             print("File:", Style.BRIGHT + Fore.CYAN + item + Style.RESET_ALL)
-            res = print_func("Total ", dictio[item][0], 10) or res
-            res = print_func("Static", dictio[item][1], 10) or res
-            res = print_func("Normal", dictio[item][2], 5) or res
-    return res
+            print_func("Total ", dictio[item][0], 10)
+            print_func("Static", dictio[item][1], 10)
+            print_func("Normal", dictio[item][2], 5)
+    return res1 or res2 or res3
 
 def print_func(name, nb, max_nb):
     """Print in a good format number of functions.
