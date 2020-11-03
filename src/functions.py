@@ -50,7 +50,8 @@ def print_funcs(what, total, dictio):
             print_func("Static", dictio[item][1], 10)
             print_func("Normal", dictio[item][2], 5)
     elif (res1 or res2 or res3):
-        print(func_prompt("warning:", ""), "one or some files does not respect maximum number of functions.")
+        print(func_prompt("warning:", ""), \
+                "one or some files does not respect maximum number of functions.")
     return res1 or res2 or res3
 
 def print_func(name, nb, max_nb):
@@ -68,4 +69,4 @@ def func_prompt(nb, max_nb):
     """Returns good color
 
     """
-    return (Fore.RED if nb > max_nb else Fore.GREEN) + Style.DIM + str(nb) + Style.RESET_ALL
+    return (Fore.RED if nb > max_nb else Fore.GREEN) + Style.BRIGHT + str(nb) + Style.RESET_ALL
