@@ -53,13 +53,18 @@ def print_funcs(dictio):
     """
     Check number of static and non-static functions
     """
+    res = 0
     print("-- functions counter --")
     for item in dictio:
         print("File:", Style.BRIGHT + Fore.CYAN + item + Style.RESET_ALL)
-        print("  Total  functions:", func_prompt(dictio[item][0], 10))
-        print("  Static functions:", func_prompt(dictio[item][1], 10))
-        print("  Normal functions:", func_prompt(dictio[item][2], 5))
-    return 0
+        res = print_func("Total ", dictio[item][0], 10) or res
+        res = print_func("Static", dictio[item][1], 10) or res
+        res = print_func("Normal", dictio[item][2], 5) or res
+    return res
+
+def print_func(name, nb, max_nb):
+    print("  " + Fore.BLUE + name + Fore.RESET + "  functions:\t", func_prompt(nb, max_nb))
+    return nb > max_nb
 
 def func_prompt(nb, max_nb):
     return (Fore.RED if nb > max_nb else Fore.GREEN) + Style.DIM + str(nb) + Style.RESET_ALL
