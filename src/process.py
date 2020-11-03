@@ -12,6 +12,7 @@ check_lines
 
 import os, sys
 from colorama import Fore, Style
+import functions
 
 def process(concatenate, max_lines, options, ignore):
     """
@@ -30,7 +31,7 @@ def process(concatenate, max_lines, options, ignore):
         place = 0
         if maxlen < len(actual[i][0]):
             maxlen = len(actual[i][0])
-        handle_dictio(actual[i], dictio)
+        functions.handle_dictio(actual[i], dictio)
         for ici in actual[i][5:]:
             if not place and len(ici) > len(actual[i][0]):
                 j = 0
@@ -43,39 +44,8 @@ def process(concatenate, max_lines, options, ignore):
         actual[i].append(place)
 
     if options[1]:
-        return print_funcs(dictio[0], dictio[1])
+        return functions.print_funcs(dictio[0], dictio[1])
     return check(actual, max_lines, options, maxlen, ignore)
-
-def handle_dictio(actu, dictio):
-    if actu[3] not in dictio[1]:
-        dictio[1][actu[3]] = [0, 0, 0]
-    dictio[1][actu[3]][0] += 1
-    dictio[1][actu[3]][1 if actu[4][:6] == "static" else 2] += 1
-    dictio[0][0] += 1
-    dictio[0][1 if actu[4][:6] == "static" else 2] += 1
-
-def print_funcs(total, dictio):
-    """
-    Check number of static and non-static functions
-    """
-    res = 0
-    print("-- functions counter --")
-    res = print_func("Total of all   ", total[0], len(dictio) * 10)
-    res = print_func("Total of static", total[1], len(dictio) * 10)
-    res = print_func("Total of normal", total[2], len(dictio) * 5)
-    for item in dictio:
-        print("File:", Style.BRIGHT + Fore.CYAN + item + Style.RESET_ALL)
-        res = print_func("Total ", dictio[item][0], 10) or res
-        res = print_func("Static", dictio[item][1], 10) or res
-        res = print_func("Normal", dictio[item][2], 5) or res
-    return res
-
-def print_func(name, nb, max_nb):
-    print("  " + Fore.BLUE + name + Fore.RESET + "  functions:\t", func_prompt(nb, max_nb))
-    return nb > max_nb
-
-def func_prompt(nb, max_nb):
-    return (Fore.RED if nb > max_nb else Fore.GREEN) + Style.DIM + str(nb) + Style.RESET_ALL
 
 def check(actual, max_lines, options, maxlen, ignore):
     """
