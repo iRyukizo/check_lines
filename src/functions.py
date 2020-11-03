@@ -37,8 +37,8 @@ def print_funcs(what, total, dictio):
     res1, res2, res3 = 0, 0, 0
     for item in dictio:
         res1 = dictio[item][0] > 10 or res1
-        res2 = dictio[item][1] > 10 or res2
-        res3 = dictio[item][2] > 10 or res3
+        res2 = dictio[item][1] > ((10 - dictio[item][2]) if dictio[item][2] <= 5 else 5) or res2
+        res3 = dictio[item][2] > 5 or res3
     print("-- functions counter --")
     print_func("Total of all   ", total[0], len(dictio) * 10 if not res1 else 0)
     print_func("Total of static", total[1], len(dictio) * 10 if not res2 else 0)
@@ -47,11 +47,22 @@ def print_funcs(what, total, dictio):
         for item in dictio:
             print("File:", Style.BRIGHT + Fore.CYAN + item + Style.RESET_ALL)
             print_func("Total ", dictio[item][0], 10)
-            print_func("Static", dictio[item][1], 10)
+            print_func("Static", dictio[item][1], ((10 - dictio[item][2]) if dictio[item][2] <= 5 else 5))
             print_func("Normal", dictio[item][2], 5)
     elif (res1 or res2 or res3):
-        print(func_prompt("warning:", ""), \
-                "one or some files does not respect maximum number of functions.")
+        print(Style.BRIGHT, end="")
+        for item in dictio:
+            if dictio[item][1] > ((10 - dictio[item][2]) if dictio[item][2] <= 5 else 5):
+                print(item + ": " + Fore.RED + "warning:" + Fore.RESET, \
+                        "too much static functions (" + str(dictio[item][1]) + " functions) ", \
+                        "[expected " + \
+                        str((10 - dictio[item][2]) if dictio[item][2] <= 5 else 5) + \
+                        " functions]")
+            if dictio[item][2] > 5:
+                print(item + ": " + Fore.RED + "warning:" + Fore.RESET, \
+                        "too much exported functions (" + str(dictio[item][2]) + " functions) " \
+                        "[expected 5 functions]")
+        print(Style.RESET_ALL, end="")
     return res1 or res2 or res3
 
 def print_func(name, nb, max_nb):
