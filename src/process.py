@@ -13,11 +13,12 @@ check_lines
 import os, sys
 from colorama import Fore, Style
 
-def process(concatenate, max_lines, remaining):
+def process(concatenate, max_lines, remaining, ignore):
     """
     Process all files given to check_files.
     concatenate : all given files
     max_lines : maximum number of lines (by default 25)
+    ignore : ignore cases
     return : status
     """
     actual = os.popen("ctags -x --c-kinds=fp --sort=no" + concatenate).read().split("\n")
@@ -40,13 +41,14 @@ def process(concatenate, max_lines, remaining):
         actual[i] = actual[i][:5]
         actual[i].append(place)
 
-    return check(actual, max_lines, remaining, maxlen)
+    return check(actual, max_lines, remaining, maxlen, ignore)
 
-def check(actual, max_lines, remaining, maxlen):
+def check(actual, max_lines, remaining, maxlen, ignore):
     """
     Check all functions in given files.
     actual : list of all actual function
     max_lines : maximum number of lines (by default 25)
+    ignore : ignore cases
     return : status
     """
     if remaining:
@@ -60,7 +62,7 @@ def check(actual, max_lines, remaining, maxlen):
                 print("File:", Style.BRIGHT + Fore.CYAN + file_ + Style.RESET_ALL)
             lines = f.readlines()
             lines = [s.strip() for s in lines]
-            nb_lines = micro_check(lines, int(actu[2]))
+            nb_lines = micro_check(lines, int(actu[2]), ignore)
             if not remaining and nb_lines > max_lines:
                 res = 1
                 print_err(actu, nb_lines, max_lines, sys.stderr)
@@ -69,17 +71,18 @@ def check(actual, max_lines, remaining, maxlen):
             f.close()
     return res
 
-def micro_check(lines, start_func):
+def micro_check(lines, start_func, ignore):
     """
     Check current function
     lines : list of lines in file
     start_func : beginning of function
+    ignore : ignore cases
     return : number of lines
     """
     braces, nb_lines, good = 0, 0, False
     for k in lines[(start_func - 1):]:
         if len(k) == 0 or \
-                ignore_case(k, [";"], ["//", "/*", "**", "*/"]):
+                ignore_case(k, ignore):
             continue
         if k == "{":
             braces+=1
@@ -94,15 +97,19 @@ def micro_check(lines, start_func):
             nb_lines += 1
     return nb_lines
 
-def ignore_case(test, cases_1, cases_2):
+def ignore_case(test, ignore):
     """
     Ignoring certain type of lines
     test : string
-    cases_1 : list of cases of size 1
-    cases_2 : list of cases of size 2
+    ignore : list of tuple (len, list of string of size len)
     return : bool
     """
-    return test[0] in cases_1 or test[:2] in cases_2
+    for x in ignore:
+        if (len(test) < x[0]):
+            return False
+        if (test[:x[0]] in x[1]):
+            return True
+    return False
 
 def print_err(actu, nb_lines, max_lines, f):
     """
