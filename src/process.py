@@ -30,12 +30,7 @@ def process(concatenate, max_lines, options, ignore):
         place = 0
         if maxlen < len(actual[i][0]):
             maxlen = len(actual[i][0])
-        if actual[i][3] not in dictio[1]:
-            dictio[1][actual[i][3]] = [0, 0, 0]
-        dictio[1][actual[i][3]][0] += 1
-        dictio[1][actual[i][3]][1 if actual[i][4][:6] == "static" else 2] += 1
-        dictio[0][0] += 1
-        dictio[0][1 if actual[i][4][:6] == "static" else 2] += 1
+        handle_dictio(actual[i], dictio)
         for ici in actual[i][5:]:
             if not place and len(ici) > len(actual[i][0]):
                 j = 0
@@ -50,6 +45,14 @@ def process(concatenate, max_lines, options, ignore):
     if options[1]:
         return print_funcs(dictio[0], dictio[1])
     return check(actual, max_lines, options, maxlen, ignore)
+
+def handle_dictio(actu, dictio):
+    if actu[3] not in dictio[1]:
+        dictio[1][actu[3]] = [0, 0, 0]
+    dictio[1][actu[3]][0] += 1
+    dictio[1][actu[3]][1 if actu[4][:6] == "static" else 2] += 1
+    dictio[0][0] += 1
+    dictio[0][1 if actu[4][:6] == "static" else 2] += 1
 
 def print_funcs(total, dictio):
     """
