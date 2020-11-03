@@ -31,18 +31,23 @@ from src import usage, process
 
 def main():
     try:
-        optlist, args = getopt.getopt(sys.argv[1:], "i:l:rh", ['lines=', "remaining", 'ignore=', "help"])
+        optlist, args = getopt.getopt( \
+                sys.argv[1:], \
+                "fi:l:rh", \
+                ["function", 'lines=', "remaining", 'ignore=', "help"])
     except getopt.GetoptError as err:
         usage.print_name(sys.stderr, ": " + str(err))
         usage.usage(1)
-    max_lines, remaining, ignore = 25, False, [";", "//", "/*", "**", "*/"]
+    max_lines, options, ignore = 25, [False, False] , [";", "//", "/*", "**", "*/"]
     for opt, arg in optlist:
         if opt == '-l' or opt == '--lines=' or opt == '--lines':
             max_lines = int(arg)
         elif opt == '-r' or opt == '--remaining':
-            remaining = True
+            options[0] = True
         elif opt == '-i' or opt == '--ignore' or opt == '--ignore=':
             ignore = arg.split(',')
+        elif opt == '-f' or opt == '--function':
+            options[1] = True
         elif opt == '-h' or opt == '--help':
             usage.usage(0)
         else:
@@ -58,7 +63,7 @@ def main():
     concatenate = ""
     for elmt in args:
         concatenate += " " + elmt
-    exit(process.process(concatenate, max_lines, remaining, sep))
+    exit(process.process(concatenate, max_lines, options, sep))
 
 if __name__ == "__main__":
     main()
