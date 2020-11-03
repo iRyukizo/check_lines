@@ -49,6 +49,8 @@ def print_funcs(what, total, dictio):
             print_func("Total ", dictio[item][0], 10)
             print_func("Static", dictio[item][1], 10)
             print_func("Normal", dictio[item][2], 5)
+    elif (res1 or res2 or res3):
+        print(func_prompt("warning:", ""), "one or some files does not respect maximum number of functions.")
     return res1 or res2 or res3
 
 def print_func(name, nb, max_nb):
