@@ -44,7 +44,7 @@ def process(concatenate, max_lines, options, ignore):
         actual[i].append(place)
 
     if options[1]:
-        return functions.print_funcs(dictio[0], dictio[1])
+        return functions.print_funcs(options[1], dictio[0], dictio[1])
     return check(actual, max_lines, options, maxlen, ignore)
 
 def check(actual, max_lines, options, maxlen, ignore):

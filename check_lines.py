@@ -33,12 +33,12 @@ def main():
     try:
         optlist, args = getopt.getopt( \
                 sys.argv[1:], \
-                "fi:l:rh", \
+                "afi:l:rh", \
                 ["function", 'lines=', "remaining", 'ignore=', "help"])
     except getopt.GetoptError as err:
         usage.print_name(sys.stderr, ": " + str(err))
         usage.usage(1)
-    max_lines, options, ignore = 25, [False, False] , [";", "//", "/*", "**", "*/"]
+    max_lines, options, ignore = 25, [False, 0] , [";", "//", "/*", "**", "*/"]
     for opt, arg in optlist:
         if opt == '-l' or opt == '--lines=' or opt == '--lines':
             max_lines = int(arg)
@@ -47,7 +47,9 @@ def main():
         elif opt == '-i' or opt == '--ignore' or opt == '--ignore=':
             ignore = arg.split(',')
         elif opt == '-f' or opt == '--function':
-            options[1] = True
+            options[1] = 1 if options[1] != 2 else 2
+        elif opt == '-a':
+            options[1] = 2
         elif opt == '-h' or opt == '--help':
             usage.usage(0)
         else:

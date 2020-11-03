@@ -26,7 +26,7 @@ def handle_dictio(actu, dictio):
     dictio[0][0] += 1
     dictio[0][1 if actu[4][:6] == "static" else 2] += 1
 
-def print_funcs(total, dictio):
+def print_funcs(what, total, dictio):
     """Check number of static and non-static functions.
 
     :total: Total number of functions
@@ -36,14 +36,15 @@ def print_funcs(total, dictio):
     """
     res = 0
     print("-- functions counter --")
-    res = print_func("Total of all   ", total[0], len(dictio) * 10)
-    res = print_func("Total of static", total[1], len(dictio) * 10)
-    res = print_func("Total of normal", total[2], len(dictio) * 5)
-    for item in dictio:
-        print("File:", Style.BRIGHT + Fore.CYAN + item + Style.RESET_ALL)
-        res = print_func("Total ", dictio[item][0], 10) or res
-        res = print_func("Static", dictio[item][1], 10) or res
-        res = print_func("Normal", dictio[item][2], 5) or res
+    res = print_func("Total of all   ", total[0], len(dictio) * 10) or res
+    res = print_func("Total of static", total[1], len(dictio) * 10) or res
+    res = print_func("Total of normal", total[2], len(dictio) * 5) or res
+    if what == 1:
+        for item in dictio:
+            print("File:", Style.BRIGHT + Fore.CYAN + item + Style.RESET_ALL)
+            res = print_func("Total ", dictio[item][0], 10) or res
+            res = print_func("Static", dictio[item][1], 10) or res
+            res = print_func("Normal", dictio[item][2], 5) or res
     return res
 
 def print_func(name, nb, max_nb):
