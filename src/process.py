@@ -30,7 +30,7 @@ def process(concatenate, max_lines, options, ignore):
         place = 0
         if maxlen < len(actual[i][0]):
             maxlen = len(actual[i][0])
-        if actual[i][3] not in dictio:
+        if actual[i][3] not in dictio[1]:
             dictio[1][actual[i][3]] = [0, 0, 0]
         dictio[1][actual[i][3]][0] += 1
         dictio[1][actual[i][3]][1 if actual[i][4][:6] == "static" else 2] += 1
