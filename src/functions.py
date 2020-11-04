@@ -41,9 +41,10 @@ def print_funcs(what, total, dictio):
         res2 = dictio[item][1] > ((10 - dictio[item][2]) if dictio[item][2] <= 5 else 5) or res2
         res3 = dictio[item][2] > 5 or res3
     print("-- functions counter --")
-    print_func("Total of all   ", total[0], len(dictio) * 10 if not res1 else 0)
-    print_func("Total of static", total[1], len(dictio) * 10 if not res2 else 0)
-    print_func("Total of normal", total[2], len(dictio) * 5 if not res3 else 0)
+    if (len(dictio) > 1  or what == 2):
+        print_func("Total of all   ", total[0], len(dictio) * 10 if not res1 else 0)
+        print_func("Total of static", total[1], len(dictio) * 10 if not res2 else 0)
+        print_func("Total of normal", total[2], len(dictio) * 5 if not res3 else 0)
     if what == 1:
         for item in dictio:
             print("File:", Style.BRIGHT + Fore.CYAN + item + Style.RESET_ALL)
