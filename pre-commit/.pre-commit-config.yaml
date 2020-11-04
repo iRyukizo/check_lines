@@ -11,6 +11,11 @@ repos:
     entry: check_lines -l 25
     language: system
     files: \.(c)$
+  - id: check_lines -a
+    name: Check exported and static functions
+    entry: check_lines -a
+    language: system
+    files: \.(c)$
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v2.3.0
   hooks:

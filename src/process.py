@@ -12,8 +12,9 @@ check_lines
 
 import os, sys
 from colorama import Fore, Style
+import functions
 
-def process(concatenate, max_lines, remaining, ignore):
+def process(concatenate, max_lines, options, ignore):
     """
     Process all files given to check_files.
     concatenate : all given files
@@ -21,15 +22,16 @@ def process(concatenate, max_lines, remaining, ignore):
     ignore : ignore cases
     return : status
     """
-    actual = os.popen("ctags -x --c-kinds=fp --sort=no" + concatenate).read().split("\n")
+    actual = os.popen("ctags -x --c-kinds=f --sort=no" + concatenate).read().split("\n")
     actual = actual[:len(actual) - 1]
     actual = [s.strip() for s in actual]
     actual = [s.split() for s in actual]
-    maxlen = 0;
+    maxlen, dictio = 0, [[0,0,0], {}]
     for i in range(len(actual)):
         place = 0
         if maxlen < len(actual[i][0]):
             maxlen = len(actual[i][0])
+        functions.handle_dictio(actual[i], dictio)
         for ici in actual[i][5:]:
             if not place and len(ici) > len(actual[i][0]):
                 j = 0
@@ -41,32 +43,35 @@ def process(concatenate, max_lines, remaining, ignore):
         actual[i] = actual[i][:5]
         actual[i].append(place)
 
-    return check(actual, max_lines, remaining, maxlen, ignore)
+    if options[1]:
+        return functions.print_funcs(options[1], dictio[0], dictio[1])
+    return check(actual, max_lines, options, maxlen, ignore)
 
-def check(actual, max_lines, remaining, maxlen, ignore):
+def check(actual, max_lines, options, maxlen, ignore):
     """
     Check all functions in given files.
     actual : list of all actual function
     max_lines : maximum number of lines (by default 25)
+    options : list of options
     ignore : ignore cases
     return : status
     """
-    if remaining:
+    if options[0]:
         print("-- remaining lines --")
     res, file_ = 0, ""
     for actu in actual:
         if (actu[1] == "function"):
             f = open(actu[3])
-            if remaining and file_ != actu[3]:
+            if options[0] and file_ != actu[3]:
                 file_ = actu[3]
                 print("File:", Style.BRIGHT + Fore.CYAN + file_ + Style.RESET_ALL)
             lines = f.readlines()
             lines = [s.strip() for s in lines]
             nb_lines = micro_check(lines, int(actu[2]), ignore)
-            if not remaining and nb_lines > max_lines:
+            if not options[0] and nb_lines > max_lines:
                 res = 1
                 print_err(actu, nb_lines, max_lines, sys.stderr)
-            if remaining:
+            if options[0]:
                 remain(actu, max_lines, nb_lines, maxlen)
             f.close()
     return res
