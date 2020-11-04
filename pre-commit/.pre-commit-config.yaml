@@ -8,12 +8,14 @@ repos:
     files: \.(c|h)$
   - id: check_lines
     name: Check lines
-    entry: check_lines -l 25
+    entry: check_lines 
+    args: [-l 25]
     language: system
     files: \.(c)$
   - id: check_lines -a
     name: Check exported and static functions
-    entry: check_lines -a
+    entry: check_lines
+    args: [-a]
     language: system
     files: \.(c)$
 - repo: https://github.com/pre-commit/pre-commit-hooks
