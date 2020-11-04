@@ -10,6 +10,7 @@ check_lines
 @author: iRyukizo
 """
 
+import sys
 from colorama import Fore, Style
 
 def handle_dictio(actu, dictio):
@@ -50,19 +51,19 @@ def print_funcs(what, total, dictio):
             print_func("Static", dictio[item][1], ((10 - dictio[item][2]) if dictio[item][2] <= 5 else 5))
             print_func("Normal", dictio[item][2], 5)
     elif (res1 or res2 or res3):
-        print(Style.BRIGHT, end="")
+        print(Style.BRIGHT, end="", file=sys.stderr)
         for item in dictio:
             if dictio[item][1] > ((10 - dictio[item][2]) if dictio[item][2] <= 5 else 5):
                 print(item + ": " + Fore.RED + "warning:" + Fore.RESET, \
                         "too much static functions (" + str(dictio[item][1]) + " functions) ", \
                         "[expected " + \
                         str((10 - dictio[item][2]) if dictio[item][2] <= 5 else 5) + \
-                        " functions]")
+                        " functions]", file=sys.stderr)
             if dictio[item][2] > 5:
                 print(item + ": " + Fore.RED + "warning:" + Fore.RESET, \
                         "too much exported functions (" + str(dictio[item][2]) + " functions) " \
-                        "[expected 5 functions]")
-        print(Style.RESET_ALL, end="")
+                        "[expected 5 functions]", file=sys.stderr)
+        print(Style.RESET_ALL, end="", file=sys.stderr)
     return res1 or res2 or res3
 
 def print_func(name, nb, max_nb):
