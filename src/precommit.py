@@ -20,10 +20,13 @@ def get_project_path():
 def install():
     pwd, project = os.getcwd(), get_project_path()
     clang, precommit = p.join(project, "pre-commit/.clang-format"), p.join(project, "pre-commit/.pre-commit-config.yaml")
+    gitignore = p.join(project, "pre-commit/.gitignore")
     print("Copying " + clang + " into " + pwd)
     shutil.copy(clang, pwd)
     print("Copying " + precommit + " into " + pwd)
     shutil.copy(precommit, pwd)
+    print("Copying " + gitignore + " into " + pwd)
+    shutil.copy(gitignore, pwd)
     try:
         inst = os.popen("pre-commit install")
     except:
