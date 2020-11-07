@@ -8,7 +8,7 @@ repos:
     files: \.(c|h)$
   - id: check_lines
     name: Check lines
-    entry: check_lines 
+    entry: check_lines
     args: [-l 25]
     language: system
     files: \.(c)$
