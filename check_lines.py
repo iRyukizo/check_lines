@@ -27,14 +27,14 @@ sys.path.append(os.path.join( \
         'src' \
         ) \
         )
-from src import usage, process
+from src import precommit , process, usage
 
 def main():
     try:
         optlist, args = getopt.getopt( \
                 sys.argv[1:], \
                 "afi:l:rh", \
-                ["function", 'lines=', "remaining", 'ignore=', "help"])
+                ["function", 'lines=', "remaining", 'ignore=', "install", "help"])
     except getopt.GetoptError as err:
         usage.print_name(sys.stderr, ": " + str(err))
         usage.usage(1)
@@ -52,6 +52,8 @@ def main():
             options[1] = 2
         elif opt == '-h' or opt == '--help':
             usage.usage(0)
+        elif opt == '--install':
+            exit(precommit.install())
         else:
             usage.print_name(sys.stderr, ":" + opt + ": unhandled option.")
             usage.usage(1)
