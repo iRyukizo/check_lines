@@ -12,7 +12,20 @@ check_lines
 
 import os, sys
 from colorama import Fore, Style
-import functions
+sys.path.append(os.path.join( \
+        os.path.dirname( \
+        os.path.realpath( \
+        os.path.join( \
+        os.path.dirname( \
+        sys.argv[0] \
+        ), sys.argv[0] \
+        ) \
+        ) \
+        ), \
+        'src' \
+        ) \
+        )
+from src import functions
 
 def process(concatenate, max_lines, options, ignore):
     """
