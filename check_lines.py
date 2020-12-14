@@ -38,7 +38,7 @@ def main():
     except getopt.GetoptError as err:
         usage.print_name(sys.stderr, ": " + str(err))
         usage.usage(1)
-    max_lines, options, ignore = 25, [False, 0] , [";", "//", "/*", "**", "*/"]
+    max_lines, options, ignore = 25, [False, 0] , ["//", "/*", "**", "*/"]
     for opt, arg in optlist:
         if opt == '-l' or opt == '--lines=' or opt == '--lines':
             max_lines = int(arg)
