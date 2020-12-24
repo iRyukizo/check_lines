@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-__version__ = 0.2
+__version__ = '0.2.7'
 __modified__ = ("2020", "12", "24")
 __author__ = "Hugo 'iRyukizo' MOREAU"
 __maintainer__ = "Hugo 'iRyukizo' MOREAU"
