@@ -38,11 +38,8 @@ File: other.c
   Normal  functions:	 7
 ```
 ---
-### You may want to do:
+### How to install:
 ```sh
-ln -s check_lines/check_lines.py /usr/bin/check_lines
+pip install check-lines
 ```
-In that case just run :
-```sh
-./install.sh
-```
+See: https://pypi.org/project/check-lines/
