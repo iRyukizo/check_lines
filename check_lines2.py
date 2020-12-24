@@ -44,7 +44,6 @@ def main():
     infos = info.LinesInfos(args.files, int(args.lines),
             (args.remaining, args.functions, args.all),
             args.ignore.split(","))
-    infos.get_func()
     exit(infos.process())
 
 if __name__ == "__main__":

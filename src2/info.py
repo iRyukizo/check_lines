@@ -28,6 +28,7 @@ class LinesInfos:
         :returns: exit_status
 
         """
+        self.get_func()
         if (self._options[1] or self._options[2]):
             return functions.Functions.print_funcs(1 if self._options[1] else 2,
                     self._dictio_func[0], self._dictio_func[1])
