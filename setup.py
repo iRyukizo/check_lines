@@ -6,7 +6,7 @@ setuptools.setup(
         author_email='hugo.moreau@epita.fr',
         description='A little script to check lines using ctags',
         license='MIT',
-        version='0.2.7',
+        version='0.2.8',
         scripts=['check_lines'],
         url='https://github.com/iRyukizo/check_lines',
         packages=['src'],
