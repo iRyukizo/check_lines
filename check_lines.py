@@ -1,73 +1,50 @@
 #!/usr/bin/env python3
 
-__author__ = "Hugo 'iRyukizo' MOREAU"
-__maintainer__ = "Hugo 'iRyukizo' MOREAU"
-__status__ = "Production"
+__version__ = 0.2
+__modified__ = ("2020", "12", "24")
 
-"""
-check_lines
-2020
-@author: iRyukizo
-"""
+import argparse
+from src import info, precommit
 
-import getopt, os, sys
-# A little bit tricky, but does the work for now
-# Since we use a symlink for using checklines,
-# We need to import from the good folder.
-sys.path.append(os.path.join( \
-        os.path.dirname( \
-        os.path.realpath( \
-        os.path.join( \
-        os.path.dirname( \
-        sys.argv[0] \
-        ), sys.argv[0] \
-        ) \
-        ) \
-        ), \
-        'src' \
-        ) \
-        )
-from src import precommit , process, usage
+def parse():
+    """Parse all options and files.
+    :returns: args
+
+    """
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-f", "--functions", dest="functions",
+            action='store_true',
+            help="show number of functions for desired <files>")
+    parser.add_argument("-a", dest="all", action='store_true',
+            help="same as -f, but will print a resume")
+    parser.add_argument("files", metavar="files", type=str, nargs='+',
+            help="Files to process")
+    parser.add_argument("-l", "--lines", dest="lines", type=int, default=25,
+            help="specify maximum number of lines for <files>")
+    parser.add_argument("-r", "--remaining", dest="remaining",
+            action='store_true',
+            help="show number of remaining lines")
+    parser.add_argument("-i", "--ignore", dest="ignore", type=str,
+            default="//,/*,**,*/",
+            help="specify which character should be ignored while processing")
+    parser.add_argument("--install", dest="install", nargs=0,
+            action=precommit.PreCommit,
+            help="install pre-commit files for your repositories")
+    parser.add_argument("-v", "--version", action="version",
+                    version='%(prog)s {version} {date}'.
+                    format(version=__version__, date="-".join(__modified__)))
+
+    args = parser.parse_args()
+    return args
 
 def main():
-    try:
-        optlist, args = getopt.getopt( \
-                sys.argv[1:], \
-                "afi:l:rh", \
-                ["function", 'lines=', "remaining", 'ignore=', "install", "help"])
-    except getopt.GetoptError as err:
-        usage.print_name(sys.stderr, ": " + str(err))
-        usage.usage(1)
-    max_lines, options, ignore = 25, [False, 0] , ["//", "/*", "**", "*/"]
-    for opt, arg in optlist:
-        if opt == '-l' or opt == '--lines=' or opt == '--lines':
-            max_lines = int(arg)
-        elif opt == '-r' or opt == '--remaining':
-            options[0] = True
-        elif opt == '-i' or opt == '--ignore' or opt == '--ignore=':
-            ignore = arg.split(',')
-        elif opt == '-f' or opt == '--function':
-            options[1] = 1 if options[1] != 2 else 2
-        elif opt == '-a':
-            options[1] = 2
-        elif opt == '-h' or opt == '--help':
-            usage.usage(0)
-        elif opt == '--install':
-            exit(precommit.install())
-        else:
-            usage.print_name(sys.stderr, ":" + opt + ": unhandled option.")
-            usage.usage(1)
-
-    sep = [ (x, []) for x in range(len(max(ignore, key=len)) + 1)]
-    for x in ignore:
-        sep[len(x)][1].append(x)
-    if (len(args) < 1):
-        usage.print_name(sys.stderr, ": no files specified")
-        usage.usage(1)
-    concatenate = ""
-    for elmt in args:
-        concatenate += " " + elmt
-    exit(process.process(concatenate, max_lines, options, sep))
+    """Main function.
+    """
+    args = parse()
+    infos = info.LinesInfos(args.files, int(args.lines),
+            (args.remaining, args.functions, args.all),
+            args.ignore.split(","))
+    exit(infos.process())
 
 if __name__ == "__main__":
     main()
