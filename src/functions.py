@@ -1,3 +1,9 @@
+__version__ = 0.2
+__modified__ = ("2020", "12", "24")
+__author__ = "Hugo 'iRyukizo' MOREAU"
+__maintainer__ = "Hugo 'iRyukizo' MOREAU"
+__status__ = "Production"
+
 import sys
 from colorama import Fore, Style
 
