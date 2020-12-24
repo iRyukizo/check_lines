@@ -3,7 +3,7 @@ import setuptools
 setuptools.setup(
         name='check_lines',
         author='iRyukizo',
-        version='0.2.4',
+        version='0.2.5',
         scripts=['check_lines'],
         url='https://github.com/iRyukizo/check_lines',
         packages=['src'],
