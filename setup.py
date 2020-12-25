@@ -6,10 +6,10 @@ setuptools.setup(
         author_email='hugo.moreau@epita.fr',
         description='A little script to check lines using ctags',
         license='MIT',
-        version='0.2.8',
+        version='0.2.9',
         scripts=['check_lines'],
         url='https://github.com/iRyukizo/check_lines',
-        packages=['src'],
+        packages=['checklines'],
         python_requires='>=3.5',
         install_requires=['colorama']
 )
