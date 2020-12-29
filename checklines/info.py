@@ -60,8 +60,13 @@ class LinesInfos:
         func = os.popen(command).read().split("\n")
         func = func[:len(func) - 1]
         func = [s.strip().split() for s in func]
+        visited, newfunc = [], []
         maxlen, dictio = 0, [[0,0,0], {}]
         for i in range(len(func)):
+            if func[i] in visited:
+                continue
+            else:
+                visited.append(func[i].copy())
             place = 0
             if maxlen < len(func[i][0]):
                 maxlen = len(func[i][0])
@@ -76,7 +81,8 @@ class LinesInfos:
                 func[i][4] += " " + ici
             func[i] = func[i][:5]
             func[i].append(place)
-        self._func = func
+            newfunc.append(func[i])
+        self._func = newfunc
         self._max_len = maxlen
         self._dictio_func = dictio
 
