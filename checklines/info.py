@@ -1,5 +1,5 @@
-__version__ = 0.2
-__modified__ = ("2020", "12", "24")
+__version__ = '0.3.0'
+__modified__ = ("2020", "12", "29")
 __author__ = "Hugo 'iRyukizo' MOREAU"
 __maintainer__ = "Hugo 'iRyukizo' MOREAU"
 __status__ = "Production"
@@ -56,7 +56,7 @@ class LinesInfos:
         :returns: TODO
 
         """
-        command = "ctags -x --c-kinds=f --sort=no " + " ".join(self._files)
+        command = "ctags -x --c-kinds=f --sort=no -R --languages=c,c++ " + " ".join(self._files)
         func = os.popen(command).read().split("\n")
         func = func[:len(func) - 1]
         func = [s.strip().split() for s in func]
