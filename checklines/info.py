@@ -45,8 +45,6 @@ class LinesInfos:
                 self._files_cont.append(files.File(location, self._func[beg:i]))
                 location, beg = self._func[i][3], i
         self._files_cont.append(files.File(location, self._func[beg:end]))
-        for elmt in self._files_cont:
-            print(elmt)
         if (self._options[1] or self._options[2]):
             return functions.Functions.print_funcs(1 if self._options[1] else 2,
                     self._dictio_func[0], self._dictio_func[1])
