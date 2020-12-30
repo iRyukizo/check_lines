@@ -6,7 +6,7 @@ __status__ = "Production"
 
 import os, sys
 from colorama import Fore, Style
-from . import functions
+from . import functions, files
 
 class LinesInfos:
 
@@ -27,6 +27,7 @@ class LinesInfos:
         self._options = options
         self._ignore = ignore
         self._func = None
+        self._files_cont = []
         self._max_len = 0
         self._dictio_func = None
 
@@ -36,12 +37,22 @@ class LinesInfos:
 
         """
         self.get_func()
+        if self._func == None:
+            return 0
+        location, beg, end = self._func[0][3], 0, len(self._func)
+        for i in range(1, end):
+            if (location != self._func[i][3]):
+                self._files_cont.append(files.File(location, self._func[beg:i]))
+                location, beg = self._func[i][3], i
+        self._files_cont.append(files.File(location, self._func[beg:end]))
+        for elmt in self._files_cont:
+            print(elmt)
         if (self._options[1] or self._options[2]):
             return functions.Functions.print_funcs(1 if self._options[1] else 2,
                     self._dictio_func[0], self._dictio_func[1])
         return self.check()
 
-    def print_info(self):
+    def __str__(self):
         """Debug purpose only"""
         print(self._files)
         print(self._max_lines)
