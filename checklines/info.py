@@ -44,7 +44,7 @@ class LinesInfos:
             return self.remain()
         return self.default()
 
-    def __str__(self):
+    def print(self):
         """Debug purpose only"""
         print(self._files)
         print(self._max_lines)
