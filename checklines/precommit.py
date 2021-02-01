@@ -12,7 +12,10 @@ class PreCommit(argparse.Action):
         try:
             os.popen("curl -fsLo .clang-format https://raw.githubusercontent.com/iRyukizo/check_lines/main/pre-commit/.clang-format")
             os.popen("curl -fsLo .gitignore https://raw.githubusercontent.com/iRyukizo/check_lines/main/pre-commit/.gitignore")
-            os.popen("curl -fsLo .pre-commit-config.yaml https://raw.githubusercontent.com/iRyukizo/check_lines/main/pre-commit/.pre-commit-config.yaml")
+            if (values == "cpp"):
+                os.popen("curl -fsLo .pre-commit-config.yaml https://raw.githubusercontent.com/iRyukizo/check_lines/main/pre-commit/.pre-commit-config.yamlcpp")
+            else:
+                os.popen("curl -fsLo .pre-commit-config.yaml https://raw.githubusercontent.com/iRyukizo/check_lines/main/pre-commit/.pre-commit-config.yaml")
             inst = os.popen("pre-commit install")
         except:
             return 1

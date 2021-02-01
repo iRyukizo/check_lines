@@ -30,7 +30,7 @@ def parse():
     parser.add_argument("-i", "--ignore", dest="ignore", type=str,
             default="//,/*,**,*/",
             help="specify which character should be ignored while processing")
-    parser.add_argument("--install", dest="install", nargs=0,
+    parser.add_argument("--install", dest="install", nargs='?',
             action=precommit.PreCommit,
             help="install pre-commit files for your repositories")
     parser.add_argument("-v", "--version", action="version",
