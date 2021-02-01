@@ -1,5 +1,5 @@
 __version__ = 0.2
-__modified__ = ("2020", "12", "24")
+__modified__ = ("2021", "02", "01")
 __author__ = "Hugo 'iRyukizo' MOREAU"
 __maintainer__ = "Hugo 'iRyukizo' MOREAU"
 __status__ = "Production"
@@ -12,7 +12,10 @@ class PreCommit(argparse.Action):
         try:
             os.popen("curl -fsLo .clang-format https://raw.githubusercontent.com/iRyukizo/check_lines/main/pre-commit/.clang-format")
             os.popen("curl -fsLo .gitignore https://raw.githubusercontent.com/iRyukizo/check_lines/main/pre-commit/.gitignore")
-            os.popen("curl -fsLo .pre-commit-config.yaml https://raw.githubusercontent.com/iRyukizo/check_lines/main/pre-commit/.pre-commit-config.yaml")
+            if (values == "cpp"):
+                os.popen("curl -fsLo .pre-commit-config.yaml https://raw.githubusercontent.com/iRyukizo/check_lines/main/pre-commit/.pre-commit-config.yamlcpp")
+            else:
+                os.popen("curl -fsLo .pre-commit-config.yaml https://raw.githubusercontent.com/iRyukizo/check_lines/main/pre-commit/.pre-commit-config.yaml")
             inst = os.popen("pre-commit install")
         except:
             return 1

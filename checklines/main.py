@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-__version__ = '0.2.9'
-__modified__ = ("2020", "12", "25")
+__version__ = '0.3.1'
+__modified__ = ("2021", "02", "01")
 __author__ = "Hugo 'iRyukizo' MOREAU"
 __maintainer__ = "Hugo 'iRyukizo' MOREAU"
 __status__ = "Production"
@@ -30,7 +30,7 @@ def parse():
     parser.add_argument("-i", "--ignore", dest="ignore", type=str,
             default="//,/*,**,*/",
             help="specify which character should be ignored while processing")
-    parser.add_argument("--install", dest="install", nargs=0,
+    parser.add_argument("--install", dest="install", nargs='?',
             action=precommit.PreCommit,
             help="install pre-commit files for your repositories")
     parser.add_argument("-v", "--version", action="version",

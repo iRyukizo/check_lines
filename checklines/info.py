@@ -1,12 +1,19 @@
-__version__ = '0.3.0'
-__modified__ = ("2020", "12", "29")
+__version__ = '0.3.2'
+__modified__ = ("2021", "02", "01")
 __author__ = "Hugo 'iRyukizo' MOREAU"
 __maintainer__ = "Hugo 'iRyukizo' MOREAU"
 __status__ = "Production"
 
 import os, sys
-from colorama import Fore, Style
-from . import functions
+from . import functions, files, func
+
+def operator(s):
+    if s[0] == "operator" and s[1] != "function":
+        s[0] += s[1]
+        for i in range(1, len(s) - 1):
+            s[i] = s[i + 1]
+        s.pop()
+    return s
 
 class LinesInfos:
 
@@ -27,6 +34,7 @@ class LinesInfos:
         self._options = options
         self._ignore = ignore
         self._func = None
+        self._files_cont = []
         self._max_len = 0
         self._dictio_func = None
 
@@ -39,9 +47,12 @@ class LinesInfos:
         if (self._options[1] or self._options[2]):
             return functions.Functions.print_funcs(1 if self._options[1] else 2,
                     self._dictio_func[0], self._dictio_func[1])
-        return self.check()
+        self.check()
+        if (self._options[0]):
+            return self.remain()
+        return self.default()
 
-    def print_info(self):
+    def print(self):
         """Debug purpose only"""
         print(self._files)
         print(self._max_lines)
@@ -60,8 +71,16 @@ class LinesInfos:
         func = os.popen(command).read().split("\n")
         func = func[:len(func) - 1]
         func = [s.strip().split() for s in func]
+        func = [operator(s) for s in func]
+        visited, newfunc = [], []
         maxlen, dictio = 0, [[0,0,0], {}]
         for i in range(len(func)):
+            if func[i][0] == '_':
+                continue
+            if func[i] in visited:
+                continue
+            else:
+                visited.append(func[i].copy())
             place = 0
             if maxlen < len(func[i][0]):
                 maxlen = len(func[i][0])
@@ -76,110 +95,31 @@ class LinesInfos:
                 func[i][4] += " " + ici
             func[i] = func[i][:5]
             func[i].append(place)
-        self._func = func
+            newfunc.append(func[i])
+        self._func = newfunc
+        if self._func == None:
+            return 0
+        location, beg, end = self._func[0][3], 0, len(self._func)
+        for i in range(1, end):
+            if (location != self._func[i][3]):
+                self._files_cont.append(files.File(location, self._func[beg:i]))
+                location, beg = self._func[i][3], i
+        self._files_cont.append(files.File(location, self._func[beg:end]))
         self._max_len = maxlen
         self._dictio_func = dictio
 
     def check(self):
-        """TODO: Docstring for check.
+        for elmt in self._files_cont:
+            elmt.check(self._ignore)
 
-        :returns: TODO
-
-        """
-        if self._options[0]:
-            print("-- remaining lines --")
-        res, file_ = 0, ""
-        for actu in self._func:
-            if (actu[1] == "function"):
-                f = open(actu[3])
-                if self._options[0] and file_ != actu[3]:
-                    file_ = actu[3]
-                    print("File:", Style.BRIGHT + Fore.CYAN + file_ + Style.RESET_ALL)
-                lines = f.readlines()
-                lines = [s.strip() for s in lines]
-                nb_lines = self.micro_check(lines, int(actu[2]))
-                if not self._options[0] and nb_lines > self._max_lines:
-                    res = 1
-                    self.print_err(actu, nb_lines, sys.stderr)
-                if self._options[0]:
-                    res |= self.remain(actu, nb_lines)
-                f.close()
+    def default(self):
+        res = 0
+        for elmt in self._files_cont:
+            res |= elmt.default(self._max_lines)
         return res
 
-    def micro_check(self, lines, start_func):
-        """TODO: Docstring for micro_check.
-
-        :lines: TODO
-        :start_func: TODO
-        :returns: TODO
-
-        """
-        braces, nb_lines, good = 0, 0, False
-        for k in lines[(start_func - 1):]:
-            if len(k) == 0 or k in self._ignore:
-                continue
-            if k == "{":
-                braces+=1
-                good = True
-                continue
-            if k == "}":
-                braces -= 1
-                continue
-            if good and braces <= 0:
-                break
-            if good:
-                nb_lines += 1
-        return nb_lines
-
-    def print_err(self, actu, nb_lines, f):
-        """TODO: Docstring for print_err.
-
-        :actu: TODO
-        :nb_lines: TODO
-        :f: TODO
-        :returns: TODO
-
-        """
-        print(Style.BRIGHT, end="", file=f)
-        print(actu[3]+":"+str(actu[2])+":"+str(actu[5])+":", end=" ", file=f)
-        print(Fore.RED + "warning:" + Fore.RESET, end=" ", file=f)
-        print("This function is too long: " + \
-                str(nb_lines) + " lines [expected " + \
-                str(self._max_lines) +" lines]", file=f)
-        print(Style.RESET_ALL, end="", file=f)
-        LinesInfos.strange_print(actu[4], actu[5], f)
-
-    def strange_print(proto, offset, f):
-        """TODO: Docstring for strange_print.
-
-        :proto: TODO
-        :offset: TODO
-        :f: TODO
-        :returns: TODO
-
-        """
-        print(proto, file=f)
-        print(Style.BRIGHT + Fore.GREEN, end="", file=f)
-        for i in range(offset):
-            print(" ", file=f, end="")
-        print("^", Style.RESET_ALL, file=f)
-
-    def remain(self, actu, nb_lines):
-        """
-        Will print remaining lines for each function.
-        actual : list of actual function
-        """
-        remaining_lines, res = self._max_lines - nb_lines, 0
-        print_lines = str(remaining_lines)
-        if remaining_lines < 0:
-            print_lines = Fore.RED + print_lines
-            res = 1
-        else:
-            print_lines = Fore.GREEN + print_lines
-        print("  {0} {1:<{5}} {2:>8}:\t{3:>15} {4}".format("Function:", \
-                Fore.BLUE + actu[0] + Fore.RESET, \
-                "(" + actu[2] + ":" + str(actu[5]) + ")", \
-                print_lines, \
-                "lines" + Fore.RESET, \
-                self._max_len + 10))
+    def remain(self):
+        res = 0
+        for elmt in self._files_cont:
+            res |= elmt.remain(self._max_lines, self._max_len)
         return res
