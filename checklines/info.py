@@ -1,11 +1,19 @@
-__version__ = '0.3.0'
-__modified__ = ("2020", "12", "29")
+__version__ = '0.3.2'
+__modified__ = ("2021", "02", "01")
 __author__ = "Hugo 'iRyukizo' MOREAU"
 __maintainer__ = "Hugo 'iRyukizo' MOREAU"
 __status__ = "Production"
 
 import os, sys
 from . import functions, files, func
+
+def operator(s):
+    if s[0] == "operator":
+        s[0] += s[1]
+        for i in range(1, len(s) - 1):
+            s[i] = s[i + 1]
+        s.pop()
+    return s
 
 class LinesInfos:
 
@@ -63,9 +71,12 @@ class LinesInfos:
         func = os.popen(command).read().split("\n")
         func = func[:len(func) - 1]
         func = [s.strip().split() for s in func]
+        func = [operator(s) for s in func]
         visited, newfunc = [], []
         maxlen, dictio = 0, [[0,0,0], {}]
         for i in range(len(func)):
+            if func[i][0] == '_':
+                continue
             if func[i] in visited:
                 continue
             else:
