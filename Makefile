@@ -7,7 +7,7 @@ TRASH = check_lines.egg-info dist build
 all: upload
 
 upload:
-	$(PYTHON) $(SETUP) sdist bdist_wheel
+	$(PYTHON) $(SETUP) sdist
 	$(PYTHON) -m twine upload --repository $(SERVER) dist/*
 
 clean:
