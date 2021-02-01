@@ -8,7 +8,7 @@ import os, sys
 from . import functions, files, func
 
 def operator(s):
-    if s[0] == "operator":
+    if s[0] == "operator" and s[1] != "function":
         s[0] += s[1]
         for i in range(1, len(s) - 1):
             s[i] = s[i + 1]
