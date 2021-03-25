@@ -28,7 +28,7 @@ class Function:
                 braces += 1
                 good = True
                 continue
-            if k == "}":
+            if k == "}" or (len(k) >= 2 and k[0:2] == "} "):
                 braces -= 1
                 continue
             if good and braces <= 0:
